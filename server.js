@@ -12,7 +12,7 @@ app.use(express.json({ extended: false }));
 app.get('/', (req, res) => res.send('Server Running...'));
 
 // Define Routes
-app.use('/products', require('./routes/products'));
+app.use('/users', require('./routes/users'));
 
 const PORT = process.env.PORT || 5000;
 
