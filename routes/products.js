@@ -15,9 +15,38 @@ const Product = require('../models/Product');
 // @route  GET /products
 // @desc   Get all products
 // @access Public
+
+// GET /products?page=2&per_page=20
+// GET /products?sortBy=date:desc
 router.get('/', async (req, res) => {
+	// default values
+	let limit = 100;
+	let skip = 0;
+	let sort = {};
+
+	// both queries need to be provided
+	if (req.query.page && req.query.per_page) {
+		const per_page = parseInt(req.query.per_page);
+		const page = parseInt(req.query.page);
+
+		// for non-numeric queries
+		if (Number.isNaN(per_page) || Number.isNaN(page)) {
+			res.status(400).send('Invalid query');
+		}
+
+		if ((per_page > 0 && per_page <= 100) && (page > 0)) {
+			limit = per_page;
+			skip = (page - 1) * per_page;
+		}
+	}
+
+	if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
 	try {
-		const products = await Product.find().sort({ date: -1});
+		const products = await Product.find({}, null, {limit, skip, sort});
 		res.json(products);
 	} catch (err) {
 		console.error(err.message);
@@ -88,7 +117,7 @@ router.post('/',
 // @route  PUT /products/:id
 // @desc   Update a product
 // @access Private, admin
-router.put('/', 
+router.put('/:id', 
 	[
 		authorize(Roles.Admin),
 		[
@@ -150,3 +179,5 @@ router.delete('/:id', authorize(Roles.Admin), async (req, res) => {
 		res.status(500).send('Server error');
 	}
 });
+
+module.exports = router;

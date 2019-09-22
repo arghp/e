@@ -13,6 +13,7 @@ app.get('/', (req, res) => res.send('Server Running...'));
 
 // Define Routes
 app.use('/users', require('./routes/users'));
+app.use('/products', require('./routes/products'));
 
 const PORT = process.env.PORT || 5000;
 
