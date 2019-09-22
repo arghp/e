@@ -5,10 +5,53 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 
-const User = require('../../models/User');
+const authorize = require('../middleware/authorize');
+const Roles = require('../config/roles');
+const User = require('../models/User');
 
-// @route  POST api/users
-// @desc   Register user
+// @route  GET /users
+// @desc   Get all users
+// @access Private, Admin
+router.get('/', authorize(Roles.Admin), async (req, res) => {
+	try {
+		const users = await User.find().sort({ date: -1});
+		res.json(users);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// @route  GET /users/:id
+// @desc   Get user by id
+// @access Private, but users can only view their own information
+router.get('/:id', authorize(), async (req, res) => {
+	try {
+		// only admins can access other records
+		if (req.user.id !== req.params.id && req.user.role !== Roles.Admin) {
+			return res.status(401).json({ msg: 'Authorization denied.' });
+		}
+
+		const user = await User.findById(req.params.id);
+
+		if (!user) {
+			return res.status(404).json({ msg: 'User not found'});
+		}
+
+		res.json(user);
+	} catch (err) {
+		console.error(err.message);
+
+		if (err.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'User not found'});
+		}
+
+		res.status(500).send('Server error');
+	}
+});
+
+// @route  POST /users
+// @desc   Register a user
 // @access Public
 router.post('/', 
 	[
@@ -58,13 +101,14 @@ router.post('/',
 				}
 			}
 
+			// LATE EXPIRATION FOR TESTING
 			jwt.sign(
 				payload,
 				config.get('jwtSecret'),
 				{ expiresIn: 360000 },
 				(err, token) => {
 					if (err) throw err;
-					res.json({ token });
+					res.status(201).json({ token });
 				}
 			);
 
