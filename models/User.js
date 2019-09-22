@@ -16,8 +16,9 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	avatar: {
-		type: String
+	role: {
+		type: String,
+		default: 'User'
 	},
 	date: {
 		type: Date,
