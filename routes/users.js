@@ -14,7 +14,7 @@ const User = require('../models/User');
 // @access Private, Admin
 router.get('/', authorize(Roles.Admin), async (req, res) => {
 	try {
-		const users = await User.find().sort({ date: -1});
+		const users = await User.find().select('-password').sort({ date: -1});
 		res.json(users);
 	} catch (err) {
 		console.error(err.message);
@@ -32,7 +32,7 @@ router.get('/:id', authorize(), async (req, res) => {
 			return res.status(401).json({ msg: 'Authorization denied.' });
 		}
 
-		const user = await User.findById(req.params.id);
+		const user = await User.findById(req.params.id).select('-password');
 
 		if (!user) {
 			return res.status(404).json({ msg: 'User not found'});
