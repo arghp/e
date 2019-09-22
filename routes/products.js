@@ -48,3 +48,39 @@ router.get('/:id', async (req, res) => {
 		res.status(500).send('Server error');
 	}
 });
+
+// @route  POST /products
+// @desc   Create a new product
+// @access Public
+router.post('/', 
+	[
+		authorize(Roles.Admin),
+		[
+		check('name', 'Name is required').not().isEmpty(),
+		check('description', 'Description is required').not().isEmpty(),
+		check('quantity', 'Quantity is required').not().isEmpty()
+		]
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+
+		const { name, description, quantity } = req.body;
+
+		try {
+			let product = new Product({
+				name,
+				description,
+				quantity
+			});
+
+			await product.save();
+			res.status(201).send(product);
+		} catch(err) {
+			console.error(err.message);
+			res.status(500).send('Server Error');
+		}
+	}
+);
