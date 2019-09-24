@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 
 import Login from '../Login/Login';
+import Navigation from '../../components/Navigation/Navigation';
 
 class Shop extends Component {
 	constructor(props) {
@@ -14,20 +15,20 @@ class Shop extends Component {
   }
 
   handleLogin = (data) => {
-  	console.log(data);
+  	this.setState({
+  		isAuthenticated: true,
+  		authToken: data.token
+  	});
   }
 
 	render () {
+		let screen = <Route path="/" render={(props) => <Login {...props} onLogin={this.handleLogin} />} />;
+		if (this.state.isAuthenticated) {
+			screen = <Route path="/" component={Navigation} />;
+		}
 		return (
 			<div className="Shop">
-				<header>
-					<nav>
-						<ul>
-							<li>Hi</li>
-						</ul>
-					</nav>
-				</header>
-				<Route path="/" render={(props) => <Login {...props} onLogin={this.handleLogin} />} />
+				{screen}
 			</div>
 		);
 	}
