@@ -29,9 +29,27 @@ class Shop extends Component {
 		this.setState({purchasing: false});
 	}
 
-	addToCartHandler = (product) => {
+	addToCartHandler = (quantity) => {
 		let newCart = [...this.state.cart];
-		newCart.push(product);
+		let exists = false;
+
+		// check if the product is already in the cart
+		// in which case we just update the quantity
+		newCart.forEach((element) => {
+			if (element.id === this.state.currentlySelected._id) {
+				exists = true;
+				element.quantity = quantity;
+			}
+		});
+
+		if (!exists) {
+			newCart.push({
+				id: this.state.currentlySelected._id,
+				name: this.state.currentlySelected.name,
+				quantity: quantity
+			});
+		}
+
 		this.setState({
 			cart: newCart
 		}, () => {

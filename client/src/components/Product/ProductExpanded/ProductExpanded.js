@@ -2,21 +2,17 @@ import React, { Component } from 'react';
 
 class ProductExpanded extends Component {
 	state = {
-		id: '',
-		name: '',
 		quantity: 1
 	}
 
-	componentDidMount () {
-		this.setState({
-			id: this.props.product._id,
-			name: this.props.product.name,
-			quantity: 1
-		});
+	handleChange = (e) => {
+		this.setState({quantity: parseInt(e.target.value)});
 	}
 
-	handleChange = (e) => {
-		this.setState({quantity: e.target.value});
+	handleAdd = () => {
+		// reset
+		this.setState({quantity: 1});
+		this.props.add(this.state.quantity);
 	}
 
 	render () {
@@ -27,7 +23,7 @@ class ProductExpanded extends Component {
 			for (let i = 1; i <= this.props.product.quantity; i++) {
 				options.push(<option key={i} value={i}>{i}</option>);
 			}
-			quantityList = <select value="1" onChange={this.handleChange}>{options}</select>;
+			quantityList = <select value={this.state.quantity} onChange={this.handleChange}>{options}</select>;
 		}
 
 		return (
@@ -35,7 +31,7 @@ class ProductExpanded extends Component {
 				<h3>{this.props.product.name}</h3>
 				<p>{this.props.product.description}</p>
 				{quantityList}
-				<button onClick={() => this.props.add({...this.state})}>Add to cart</button>
+				<button onClick={this.handleAdd}>Add to cart</button>
 			</>
 		);
 	}
