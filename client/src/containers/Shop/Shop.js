@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navigation from '../../components/Navigation/Navigation';
 import Products from './Products/Products';
 import Modal from '../../components/UI/Modal/Modal';
+import ProductExpanded from '../../components/Product/ProductExpanded/ProductExpanded';
 
 class Shop extends Component {
 	state = {
@@ -28,11 +29,22 @@ class Shop extends Component {
 		this.setState({purchasing: false});
 	}
 
+	addToCartHandler = (product) => {
+		let newCart = [...this.state.cart];
+		newCart.push(product);
+		this.setState({
+			cart: newCart
+		}, () => {
+			console.log(this.state);
+		});
+		this.setState({purchasing: false});
+	}
+
 	render () {
 		return (
 			<div className="Shop">
 				<Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-					<p>{this.state.currentlySelected.name}</p>
+					<ProductExpanded product={this.state.currentlySelected} add={this.addToCartHandler}/>
 				</Modal>
 				<Route path="/" component={Navigation} />
 				<Switch>
