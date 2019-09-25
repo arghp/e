@@ -9,6 +9,7 @@ import styles from './Products.module.css';
 class Products extends Component {
 	state = {
 		products: [],
+		isPurchasing: false,
 		error: false
 	}
 
