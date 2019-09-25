@@ -6,6 +6,7 @@ import Navigation from '../../components/Navigation/Navigation';
 import Products from './Products/Products';
 import Modal from '../../components/UI/Modal/Modal';
 import ProductExpanded from '../../components/Product/ProductExpanded/ProductExpanded';
+import Cart from './Cart/Cart';
 
 class Shop extends Component {
 	state = {
@@ -58,6 +59,14 @@ class Shop extends Component {
 		this.setState({purchasing: false});
 	}
 
+	removeFromCartHandler = (productId) => {
+		let newCart = this.state.cart.filter(element => element.id !== productId);
+
+		this.setState({
+			cart: newCart
+		});
+	}
+
 	render () {
 		return (
 			<div className="Shop">
@@ -66,15 +75,13 @@ class Shop extends Component {
 				</Modal>
 				<Route path="/" component={Navigation} />
 				<Switch>
-					{/*<Route path="/cart" component={Cart} />*/}
+					<Route path="/cart" render={(props) => <Cart {...props} currentCart={this.state.cart} removeItem={this.removeFromCartHandler}/>} />
 					<Route 
 						path="/products" 
-						render=
-							{
-								(props) => <Products {...props}
-									purchase={this.purchaseHandler} 
-									purchaseCancel={this.purchaseCancelHandler}/> 
-							} 
+						render= {
+							(props) => <Products {...props}
+								purchase={this.purchaseHandler} 
+								purchaseCancel={this.purchaseCancelHandler}/> } 
 					/>
 					<Redirect from="/" to="/products" />
 				</Switch>

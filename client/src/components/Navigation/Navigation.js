@@ -8,7 +8,7 @@ const Navigation = (props) => (
 		<nav>
 			<ul className={styles.NavigationItems}>
 				<li className={styles.NavigationItem}>
-					<NavLink to="/">Products</NavLink>
+					<NavLink to="/products">Products</NavLink>
 				</li>
 				<li className={styles.NavigationItem}>
 					<NavLink to="/cart/">Cart</NavLink>

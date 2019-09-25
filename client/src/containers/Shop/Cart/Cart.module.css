@@ -1,0 +1,36 @@
+.Cart {
+    width: 60%;
+    margin: auto;
+}
+
+.CartItems {
+	margin: 0;
+	padding: 0;
+	list-style-type:none;
+}
+
+.CartItems li {
+	width: 100%;
+	cursor: pointer;
+	position: relative;
+	padding: 12px 8px 12px 40px;
+	background: #fff;
+	font-size: 18px;
+	transition: 0.2s;
+}
+
+.CartItems li:hover {
+	background: #ddd;
+}
+
+.remove {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px;
+}
+
+.remove:hover {
+  background-color: #f44336;
+  color: white;
+}
