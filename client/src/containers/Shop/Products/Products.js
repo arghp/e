@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Route } from 'react-router-dom';
 
 import Product from '../../../components/Product/Product';
 import styles from './Products.module.css';
@@ -9,7 +8,6 @@ import styles from './Products.module.css';
 class Products extends Component {
 	state = {
 		products: [],
-		isPurchasing: false,
 		error: false
 	}
 
@@ -30,7 +28,7 @@ class Products extends Component {
 		let products = <p style={{ textAlign: 'center' }}>Something went wrong!</p>;
 		if (!this.state.error) {
 			products = this.state.products.map(product => {
-				return <Product key={product._id} name={product.name} description={product.description} />;
+				return <Product key={product._id} name={product.name} description={product.description} clicked={() => this.props.purchase(product._id)}/>;
 			});
 		}
 
